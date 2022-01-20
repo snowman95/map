@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 
-export const useGeolocation = () => {
+export const useGeolocation = (onProvidedLocation) => {
   const defaultLocation = { lat: 37.554722, lng: 126.970833 };
   const [location, setLocation] = useState(defaultLocation);
   const [error, setError] = useState();
+
   const option = {
     enableHighAccuracy: true,
     timeout: 1000 * 60 * 1, // 1 min (1000 ms * 60 sec * 1 minute = 60 000ms)
@@ -13,6 +14,7 @@ export const useGeolocation = () => {
   const handleSuccess = (pos) => {
     const { latitude, longitude } = pos.coords;
     setLocation({ lat: latitude, lng: longitude });
+    onProvidedLocation && onProvidedLocation();
   };
   const handleError = (error) => setError(error.message);
 
@@ -26,5 +28,5 @@ export const useGeolocation = () => {
     geolocation.getCurrentPosition(handleSuccess, handleError, option);
   }, []);
 
-  return { location, error };
+  return [location, setLocation, error];
 };

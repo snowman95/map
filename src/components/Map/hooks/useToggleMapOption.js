@@ -107,12 +107,12 @@ export const useToggleMapOption = (navermaps) => {
     }
   };
 
-  return {
+  return [
     options,
     toggleInteraction,
     toggleKinetic,
     toggleTileTransition,
     toggleControl,
     toggleMinMaxZoom,
-  };
+  ];
 };
