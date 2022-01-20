@@ -1,0 +1,52 @@
+.iw_inner {
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  pointer-events: none;
+}
+.iw_inner_address {
+  display: -webkit-box;
+  max-width: 50px;
+  font-size: 7px;
+  line-height: 1.06;
+  letter-spacing: -0.85px;
+  pointer-events: none;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  text-align: center;
+  -webkit-line-clamp: 2; /* ellipsis line */
+  -webkit-box-orient: vertical;
+}
+.iw_inner_cost {
+  font-size: 3px;
+  font-weight: 700;
+  border-radius: 10px;
+  background-color: tomato;
+  padding: 2px;
+  pointer-events: none;
+}
+.iw_inner_near_address {
+  display: -webkit-box;
+  max-width: 80px;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1.06;
+  letter-spacing: -0.85px;
+  pointer-events: none;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  text-align: center;
+  -webkit-line-clamp: 2; /* ellipsis line */
+  -webkit-box-orient: vertical;
+}
+.iw_inner_near_cost {
+  font-size: 12px;
+  font-weight: 700;
+  border-radius: 10px;
+  background-color: tomato;
+  padding: 3px;
+  pointer-events: none;
+}
