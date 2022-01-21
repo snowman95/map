@@ -2,30 +2,38 @@ import React, { useState } from "react";
 import { RenderAfterNavermapsLoaded, NaverMap } from "react-naver-maps";
 import { useGeolocation } from "./hooks/useGeolocation";
 import { Spinner } from "components/Loading/Spinner";
-import { MapInfoWindow } from "./Window/MapInfoWindow";
 import { MapMarker } from "./Marker/MapMarker";
 import { useZoom } from "./hooks/useZoom";
+import { useGetSpaceByIdQuery } from "services/space";
+import { useParams } from "react-router";
+// import { MapInfoWindow } from "./Window/MapInfoWindow";
 // import { useToggleMapOption } from "./hooks/useToggleMapOption";
 
 const key = process.env.REACT_APP_NBP_MAP_API_CLIENT_ID;
 const style = { width: "100%", height: "100vh" };
-
 export const Map = () => {
   const [ref, setRef] = useState();
   const [zoom, setZoom, isNear] = useZoom();
-  const [openWindow] = MapInfoWindow(ref, isNear);
+  const [skip, setSkip] = useState(true);
 
-  const onProvidedLocation = () => setZoom(16);
-  const [location, setLocation] = useGeolocation(onProvidedLocation);
-  const [isLoading, setIsLoading] = useState(true);
-  // const [  options, toggleInteraction, toggleKinetic,  toggleTileTransition,  toggleControl, toggleMinMaxZoom ] = useToggleMapOption();
+  const handleMarkerClicked = () => setSkip(true);
+  const handleUserLocationProvied = () => setZoom(16);
+  const [location, setLocation] = useGeolocation(handleUserLocationProvied);
+  const { openMarker } = MapMarker(ref, isNear, handleMarkerClicked);
 
-  const onClickHandle = (latlng) => {
-    setIsLoading(false);
+  /**
+   ** [확장시 사용]
+   ** 정보 팝업창 const [openWindow, closeWindow] = MapInfoWindow(ref, isNear);
+   ** 제어 기능 const [  options, toggleInteraction, toggleKinetic,  toggleTileTransition,  toggleControl, toggleMinMaxZoom ] = useToggleMapOption();
+   */
+  const { id } = useParams();
+  const { data, error, isLoading } = useGetSpaceByIdQuery(id, { skip });
+
+  const handleMapClicked = (latlng) => {
+    setSkip(false);
     setLocation(latlng);
-    openWindow(latlng);
+    openMarker(latlng);
   };
-
   return (
     <>
       {isLoading && <Spinner />}
@@ -42,10 +50,8 @@ export const Map = () => {
           onZoomChanged={setZoom}
           center={location}
           // onCenterChanged={}
-          onClick={({ latlng }) => onClickHandle(latlng)}
-        >
-          {!isLoading && <MapMarker location={location} isNear={isNear} />}
-        </NaverMap>
+          onClick={({ latlng }) => handleMapClicked(latlng)}
+        />
       </RenderAfterNavermapsLoaded>
     </>
   );
