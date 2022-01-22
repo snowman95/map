@@ -30,24 +30,22 @@ export const Map = () => {
     openMarker(latlng);
   };
   return (
-    <>
-      <RenderAfterNavermapsLoaded
-        // submodules={["geocoder"]} // 좌표 검색 기능 추가시 주석 제거
-        ncpClientId={key}
-      >
-        <NaverMap
-          id="map"
-          mapDivId="react-naver-map" // default name
-          style={style}
-          naverRef={setRef}
-          defaultZoom={zoom}
-          onZoomChanged={setZoom}
-          center={location}
-          // onCenterChanged={}
-          onClick={({ latlng }) => handleMapClicked(latlng)}
-        />
-      </RenderAfterNavermapsLoaded>
-    </>
+    <RenderAfterNavermapsLoaded
+      // submodules={["geocoder"]} // 좌표 검색 기능 추가시 주석 제거
+      ncpClientId={key}
+    >
+      <NaverMap
+        id="map"
+        mapDivId="react-naver-map" // default name
+        style={style}
+        naverRef={setRef}
+        defaultZoom={zoom}
+        onZoomChanged={setZoom}
+        center={location}
+        // onCenterChanged={}
+        onClick={({ latlng }) => handleMapClicked(latlng)}
+      />
+    </RenderAfterNavermapsLoaded>
   );
 };
 

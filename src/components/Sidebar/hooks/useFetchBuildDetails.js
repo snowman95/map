@@ -1,5 +1,3 @@
-import { useParams } from "react-router";
-import { useGetSpaceByIdQuery } from "services/space";
 import theme from "styles/theme";
 
 const {
@@ -11,12 +9,8 @@ const {
   incomeNegative,
 } = theme.compColors;
 
-export const useFetchBuildDetails = () => {
-  const { id } = useParams();
-  const { data, error, isFetching } = useGetSpaceByIdQuery(id);
-  console.log(isFetching, error, !id);
-
-  if (isFetching || error || !id || !data) return [isFetching, {}, {}, "", ""];
+export const useFetchBuildDetails = (data) => {
+  if (!data) return [];
   const {
     assetOverviewMulti: {
       assetName,
@@ -67,5 +61,5 @@ export const useFetchBuildDetails = () => {
   };
 
   const buildName = assetName.replace(assetAddress, "").trim();
-  return [isFetching, chartData, detailData, buildName, assetAddress];
+  return [chartData, detailData, buildName, assetAddress];
 };

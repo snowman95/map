@@ -2,13 +2,18 @@ import { useInnerStyle } from "../hooks/useInnerStyle";
 import { useFetchBuildAddressAndCost } from "../hooks/useFetchBuildAddressAndCost";
 import { useEffect, useState } from "react";
 import "./MapMarker.css";
+import { useGetSpaceByIdQuery } from "services/space";
+import { useLocation } from "react-router-dom";
 
 export const MapMarker = (ref, isNear, onClickCallback) => {
+  const isJibun = true; // 추후 다른 곳에서 가져오도록 제어
+  const { pathname } = useLocation();
+  const id = pathname.replace("/property/", "");
+  const { data, isFetching } = useGetSpaceByIdQuery(id, { skip: !id });
+  const [address, cost] = useFetchBuildAddressAndCost(data, isJibun);
+
   const [innerStyle] = useInnerStyle(isNear);
   const [marker, setMarker] = useState();
-
-  const isJibun = true; // 추후 다른 곳에서 가져오도록 제어
-  const [address, cost] = useFetchBuildAddressAndCost(isJibun);
   const ahchorOffset = isNear ? { x: 50, y: 80 } : { x: 25, y: 50 };
 
   useEffect(() => updateMarker(), [isNear]);
@@ -20,7 +25,7 @@ export const MapMarker = (ref, isNear, onClickCallback) => {
   };
 
   const createMarker = () => {
-    if (!ref) return;
+    if (!ref || isFetching || !data) return;
     const maps = window.naver.maps;
     const newMarker = new maps.Marker({
       icon: { content: innerStyle(address, cost) },
@@ -41,9 +46,9 @@ export const MapMarker = (ref, isNear, onClickCallback) => {
   };
   const openMarker = (position) => {
     updateMarker();
-    marker.setPosition(position);
-    marker.setTitle(address);
-    marker.setVisible(true);
+    marker?.setPosition(position);
+    marker?.setTitle(address);
+    marker?.setVisible(true);
   };
   return { openMarker };
 };
