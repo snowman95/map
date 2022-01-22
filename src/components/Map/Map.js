@@ -1,11 +1,8 @@
 import React, { useState } from "react";
 import { RenderAfterNavermapsLoaded, NaverMap } from "react-naver-maps";
 import { useGeolocation } from "./hooks/useGeolocation";
-import { Spinner } from "components/Loading/Spinner";
 import { MapMarker } from "./Marker/MapMarker";
 import { useZoom } from "./hooks/useZoom";
-import { useGetSpaceByIdQuery } from "services/space";
-import { useParams } from "react-router";
 // import { MapInfoWindow } from "./Window/MapInfoWindow";
 // import { useToggleMapOption } from "./hooks/useToggleMapOption";
 
@@ -14,9 +11,10 @@ const style = { width: "100%", height: "100vh" };
 export const Map = () => {
   const [ref, setRef] = useState();
   const [zoom, setZoom, isNear] = useZoom();
-  const [skip, setSkip] = useState(true);
+  // 건물이 눌려졌는지 판단 여부
+  const [active, setActive] = useState(false);
 
-  const handleMarkerClicked = () => setSkip(true);
+  const handleMarkerClicked = () => setActive(false);
   const handleUserLocationProvied = () => setZoom(16);
   const [location, setLocation] = useGeolocation(handleUserLocationProvied);
   const { openMarker } = MapMarker(ref, isNear, handleMarkerClicked);
@@ -26,20 +24,16 @@ export const Map = () => {
    ** 정보 팝업창 const [openWindow, closeWindow] = MapInfoWindow(ref, isNear);
    ** 제어 기능 const [  options, toggleInteraction, toggleKinetic,  toggleTileTransition,  toggleControl, toggleMinMaxZoom ] = useToggleMapOption();
    */
-  const { id } = useParams();
-  const { data, error, isLoading } = useGetSpaceByIdQuery(id, { skip });
-
   const handleMapClicked = (latlng) => {
-    setSkip(false);
+    setActive(true);
     setLocation(latlng);
     openMarker(latlng);
   };
   return (
     <>
-      {isLoading && <Spinner />}
       <RenderAfterNavermapsLoaded
-        ncpClientId={key}
         // submodules={["geocoder"]} // 좌표 검색 기능 추가시 주석 제거
+        ncpClientId={key}
       >
         <NaverMap
           id="map"

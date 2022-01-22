@@ -3,7 +3,7 @@ import { useFetchBuildAddressAndCost } from "../hooks/useFetchBuildAddressAndCos
 import { useEffect, useState } from "react";
 import "./MapMarker.css";
 
-export const MapMarker = (ref, isNear, onClick) => {
+export const MapMarker = (ref, isNear, onClickCallback) => {
   const [innerStyle] = useInnerStyle(isNear);
   const [marker, setMarker] = useState();
 
@@ -14,9 +14,9 @@ export const MapMarker = (ref, isNear, onClick) => {
   useEffect(() => updateMarker(), [isNear]);
   useEffect(() => createMarker(), [ref]);
 
-  const handleClick = () => {
-    closeMarker();
-    onClick();
+  const handleClick = (marker) => {
+    marker?.setVisible(false);
+    onClickCallback();
   };
 
   const createMarker = () => {
@@ -27,9 +27,9 @@ export const MapMarker = (ref, isNear, onClick) => {
       map: ref.instance,
       clickable: true,
     });
-    setMarker(newMarker);
-    maps.Event.addListener(newMarker, "click", handleClick);
+    maps.Event.addListener(newMarker, "click", () => handleClick(newMarker));
     newMarker.setVisible(false);
+    setMarker(newMarker);
   };
   const updateMarker = () => {
     if (!ref || !marker) return;
@@ -45,8 +45,5 @@ export const MapMarker = (ref, isNear, onClick) => {
     marker.setTitle(address);
     marker.setVisible(true);
   };
-  const closeMarker = () => {
-    marker.setVisible(false);
-  };
-  return { openMarker, closeMarker };
+  return { openMarker };
 };
