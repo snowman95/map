@@ -1,52 +1,57 @@
 import { useInnerStyle } from "../hooks/useInnerStyle";
 import { useFetchBuildAddressAndCost } from "../hooks/useFetchBuildAddressAndCost";
 import { useEffect, useState } from "react";
+import { useGetSpaceByIdQuery } from "services/space";
+import { useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { isJibunSelector } from "services/address";
 import "./MapMarker.css";
 
-export const MapMarker = (ref, isNear, onClick) => {
+export const MapMarker = (ref, isNear) => {
+  const isJibun = useSelector(isJibunSelector);
+  const { pathname } = useLocation();
+  const id = pathname.replace("/property/", "");
+  const { data, isFetching } = useGetSpaceByIdQuery(id, { skip: !id });
+  const [address, cost] = useFetchBuildAddressAndCost(data, isJibun);
   const [innerStyle] = useInnerStyle(isNear);
   const [marker, setMarker] = useState();
+  const anchorOffset = isNear ? { x: 50, y: 80 } : { x: 25, y: 50 };
 
-  const isJibun = true; // 추후 다른 곳에서 가져오도록 제어
-  const [address, cost] = useFetchBuildAddressAndCost(isJibun);
-  const ahchorOffset = isNear ? { x: 50, y: 80 } : { x: 25, y: 50 };
+  useEffect(() => ref && createMarker(), [ref]);
+  useEffect(() => address && updateMarker(), [address, isNear]);
 
-  useEffect(() => updateMarker(), [isNear]);
-  useEffect(() => createMarker(), [ref]);
+  const handleClick = (marker) => marker?.setVisible(false);
 
-  const handleClick = () => {
-    closeMarker();
-    onClick();
-  };
-
+  const iconOption = () => ({
+    title: address,
+    content: innerStyle(address, cost),
+    anchor: new window.naver.maps.Point(anchorOffset.x, anchorOffset.y),
+    visible: data,
+    // x,y (x>0이면 좌, y>0이면 위)
+  });
+  const newIconOption = () => ({
+    map: ref.instance,
+    clickable: true,
+    position: ref.instance.getCenter(),
+  });
   const createMarker = () => {
-    if (!ref) return;
     const maps = window.naver.maps;
-    const newMarker = new maps.Marker({
-      icon: { content: innerStyle(address, cost) },
-      map: ref.instance,
-      clickable: true,
-    });
+    const newMarker = new maps.Marker(newIconOption());
+    newMarker.setIcon(iconOption());
+    maps.Event.addListener(newMarker, "click", () => handleClick(newMarker));
     setMarker(newMarker);
-    maps.Event.addListener(newMarker, "click", handleClick);
-    newMarker.setVisible(false);
+    if (data === null) {
+      newMarker.setVisible(false);
+    }
   };
   const updateMarker = () => {
-    if (!ref || !marker) return;
-    marker.setIcon({
-      content: innerStyle(address, cost),
-      anchor: new window.naver.maps.Point(ahchorOffset.x, ahchorOffset.y),
-      // x,y (x>0이면 좌, y>0이면 위)
-    });
+    if (!ref) return;
+    marker?.setIcon(iconOption());
+    marker?.setVisible(data);
   };
   const openMarker = (position) => {
-    updateMarker();
-    marker.setPosition(position);
-    marker.setTitle(address);
-    marker.setVisible(true);
+    marker?.setPosition(position);
+    marker?.setVisible(data);
   };
-  const closeMarker = () => {
-    marker.setVisible(false);
-  };
-  return { openMarker, closeMarker };
+  return { openMarker };
 };

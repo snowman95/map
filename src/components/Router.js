@@ -6,7 +6,6 @@ const Router = () => (
   <BrowserRouter>
     <>
       <Routes>
-        {/* <Route path="/property" element={<Home />} /> 추후 확장성을 고려하여 작성 */}
         <Route path="/property/:id" element={<Home />} />
         <Route
           path="*"
