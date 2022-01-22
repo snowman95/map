@@ -1,3 +1,5 @@
+import { useSelector } from "react-redux";
+import { isJibunSelector } from "services/address";
 import theme from "styles/theme";
 
 const {
@@ -10,11 +12,14 @@ const {
 } = theme.compColors;
 
 export const useFetchBuildDetails = (data) => {
+  const isJibun = useSelector(isJibunSelector);
+
   if (!data) return [];
   const {
     assetOverviewMulti: {
       assetName,
       assetAddress,
+      roadNameAddress,
       buildingData,
       assetValue: {
         assetLandArea,
@@ -63,7 +68,8 @@ export const useFetchBuildDetails = (data) => {
       { value: imcomeNeg, color: incomeNegative },
     ],
   };
-
+  const address = isJibun || !roadNameAddress ? assetAddress : roadNameAddress;
   const buildName = assetName.replace(assetAddress, "").trim();
-  return [chartData, detailData, buildName, assetAddress];
+
+  return [chartData, detailData, buildName, address];
 };

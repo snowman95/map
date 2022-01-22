@@ -13,8 +13,8 @@ export const Map = () => {
   const [ref, setRef] = useState();
   const [zoom, setZoom, isNear] = useZoom();
 
-  const handleUserLocationProvied = () => setZoom(16);
-  const [location, setLocation] = useGeolocation(handleUserLocationProvied);
+  const handleUserLocationProvided = () => setZoom(16);
+  const [location, setLocation] = useGeolocation(handleUserLocationProvided);
   const { openMarker } = MapMarker(ref, isNear);
 
   //*임시 기능 : 맵 클릭 시 건물 정보 변경
@@ -26,8 +26,8 @@ export const Map = () => {
    */
   const handleMapClicked = (latlng) => {
     ChangeBuildInfo();
-    setLocation(latlng);
     openMarker(latlng);
+    setLocation(latlng);
   };
   return (
     <RenderAfterNavermapsLoaded

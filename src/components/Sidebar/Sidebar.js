@@ -72,7 +72,12 @@ const Sidebar = () => {
     await delay(1000);
     setLoading(false);
   };
-  useEffect(() => !isFetching && ForcedLoadingDelay(), [isFetching]);
+  useEffect(() => {
+    if (isFetching) {
+      setLoading(true);
+      ForcedLoadingDelay();
+    }
+  }, [isFetching]);
 
   if (loading) return <Spinner />;
   if (!data) {

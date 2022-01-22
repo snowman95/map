@@ -1,4 +1,6 @@
 import React from "react";
+import { useDispatch } from "react-redux";
+import { toggleType } from "services/address";
 import styled from "styled-components";
 import Like from "./Like/Like";
 
@@ -28,17 +30,17 @@ const Name = styled.span`
 `;
 
 const BuildName = ({ name, address }) => {
-  const handleOnclicked = () => {
-    console.log("클릭");
-  };
+  const dispatch = useDispatch();
+  const handleOnclicked = () => dispatch(toggleType());
+
   return (
     <Container>
       <FlexBox>
         <ColFlexBox>
+          <Address>{name}</Address>
           <AddressConvertButton onClick={handleOnclicked}>
-            <Address>{name}</Address>
+            <Name>{address}</Name>
           </AddressConvertButton>
-          <Name>{address}</Name>
         </ColFlexBox>
         <Like />
       </FlexBox>
