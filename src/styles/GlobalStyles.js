@@ -10,10 +10,13 @@ const GlobalStyles = createGlobalStyle`
     box-sizing : border-box;
   }
   body{
-    font-family: --apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-    font-size: 16px;
-    padding-top:105px; // develop mode 
-    /* padding-top:70px; */
+    font-family: noto-sans-cjk-kr, sans-serif;
+      /* font-family: --apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; */
+  }
+  span{
+    font-size : ${(props) => props.theme.fontSize.lg};
+    color :  ${(props) => props.theme.colors.grey};
   }
 `;
+
 export default GlobalStyles;
