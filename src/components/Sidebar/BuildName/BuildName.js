@@ -15,6 +15,7 @@ const ColFlexBox = styled.div`
 const AddressConvertButton = styled.button`
   ${(props) => props.theme.styles.cleanButton};
   ${(props) => props.theme.styles.interactive};
+  text-align: left;
 `;
 const Address = styled.span`
   font-weight: bold;

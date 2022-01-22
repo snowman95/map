@@ -3,6 +3,7 @@ import { RenderAfterNavermapsLoaded, NaverMap } from "react-naver-maps";
 import { useGeolocation } from "./hooks/useGeolocation";
 import { MapMarker } from "./Marker/MapMarker";
 import { useZoom } from "./hooks/useZoom";
+import { useSelectBuild } from "./hooks/useSelectBuild";
 // import { MapInfoWindow } from "./Window/MapInfoWindow";
 // import { useToggleMapOption } from "./hooks/useToggleMapOption";
 
@@ -11,21 +12,20 @@ const style = { width: "100%", height: "100vh" };
 export const Map = () => {
   const [ref, setRef] = useState();
   const [zoom, setZoom, isNear] = useZoom();
-  // 건물이 눌려졌는지 판단 여부
-  const [active, setActive] = useState(false);
 
-  const handleMarkerClicked = () => setActive(false);
   const handleUserLocationProvied = () => setZoom(16);
   const [location, setLocation] = useGeolocation(handleUserLocationProvied);
-  const { openMarker } = MapMarker(ref, isNear, handleMarkerClicked);
+  const { openMarker } = MapMarker(ref, isNear);
 
+  //*임시 기능 : 맵 클릭 시 건물 정보 변경
+  const [ChangeBuildInfo] = useSelectBuild();
   /**
    ** [확장시 사용]
    ** 정보 팝업창 const [openWindow, closeWindow] = MapInfoWindow(ref, isNear);
    ** 제어 기능 const [  options, toggleInteraction, toggleKinetic,  toggleTileTransition,  toggleControl, toggleMinMaxZoom ] = useToggleMapOption();
    */
   const handleMapClicked = (latlng) => {
-    setActive(true);
+    ChangeBuildInfo();
     setLocation(latlng);
     openMarker(latlng);
   };

@@ -29,7 +29,7 @@
 // };
 // export default Sidebar;
 import { Spinner } from "components/Loading/Spinner";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Search from "./Search/Search";
 import BuildName from "./BuildName/BuildName";
@@ -54,6 +54,10 @@ const popupWarning = () => {
     });
 };
 
+const delay = (time) => {
+  return new Promise((res) => setTimeout(res, time));
+};
+
 const Sidebar = () => {
   const { id } = useParams();
   const { data, isFetching } = useGetSpaceByIdQuery(id, {
@@ -62,9 +66,15 @@ const Sidebar = () => {
   const [chartData, detailData, buildName, assetAddress] =
     useFetchBuildDetails(data);
 
-  if (isFetching) {
-    return <Spinner />;
-  }
+  // 의도적인 딜레이를 주기 위해 작성함 (임시 코드)
+  const [loading, setLoading] = useState(true);
+  const ForcedLoadingDelay = async () => {
+    await delay(1000);
+    setLoading(false);
+  };
+  useEffect(() => !isFetching && ForcedLoadingDelay(), [isFetching]);
+
+  if (loading) return <Spinner />;
   if (!data) {
     popupWarning();
     error = true;

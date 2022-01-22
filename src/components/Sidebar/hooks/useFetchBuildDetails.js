@@ -15,7 +15,7 @@ export const useFetchBuildDetails = (data) => {
     assetOverviewMulti: {
       assetName,
       assetAddress,
-      buildingData: { groundFloorArea },
+      buildingData,
       assetValue: {
         assetLandArea,
         estimateLandValue: estLandValue,
@@ -25,11 +25,15 @@ export const useFetchBuildDetails = (data) => {
   } = data;
 
   const landArea = Math.round(assetLandArea);
-  const buildArea = Math.round(groundFloorArea);
+  const buildArea = !buildingData // 건물이 없을 수도 있음!
+    ? 0
+    : "groundFloorArea" in buildingData
+    ? Math.round(buildingData.groundFloorArea)
+    : 0;
   const estLandPrice = Math.round(estLandValue / 100000000);
   const estBuildPrice = Math.round(estPrice / 100000000);
   const incomePos = 4.2;
-  const imcomeNeg = 95.8;
+  const imcomeNeg = 100 - incomePos;
 
   const detailData = {
     landArea: `${landArea} ㎡`,

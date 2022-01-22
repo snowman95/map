@@ -24,6 +24,8 @@ const colors = {
   lightGreen: "#9dd9a0",
   hotPink: "#faa2a2",
   pink: "#ffcfe7",
+  blurredGrey: "rgba(0,0,0,0.05)",
+  bluuredWhite: "rgba(255, 255, 255, 0.6)",
 };
 
 const compColors = {
@@ -178,7 +180,7 @@ const styles = {
   // background ***********************************
   bgCenter: `
   background-size: cover;
-  background-position: center center;
+  background-position: center;
 `,
   // Animation
   rotation: `

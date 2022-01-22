@@ -8,8 +8,8 @@ const Container = styled.div`
   ${({ theme }) => theme.styles.fullSize};
   ${({ theme }) => theme.styles.absolute};
   ${({ theme }) => theme.styles.clickIgnore};
-  z-index: 500;
-  background-color: rgba(255, 255, 255, 0.1);
+  z-index: 5000;
+  background-color: ${({ theme }) => theme.colors.bluuredWhite};
 `;
 
 const Icon = styled.img`

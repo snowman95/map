@@ -16,6 +16,8 @@ const Charts = ({ data }) => {
           data={data[key]}
           lineWidth={40} // 도넛 두께
           animate
+          animationDuration={1000}
+          background={theme.colors.blurredGrey}
           label={({ dataEntry }) => dataEntry.name}
           labelStyle={{ fontSize: theme.fontSize.sm, letterSpacing: -0.7 }}
           labelPosition={0}
