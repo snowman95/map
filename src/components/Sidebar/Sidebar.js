@@ -42,6 +42,7 @@ import { useGetSpaceByIdQuery } from "services/space";
 const FlexBox = styled.div`
   ${({ theme }) => theme.styles.flexColumn};
   min-width: ${({ theme }) => theme.windowSize.sidebar};
+  height: 100vh;
 `;
 
 let error = false;
